@@ -1,4 +1,4 @@
-"""composeexample URL Configuratio2
+"""composeexample URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/1.11/topics/http/urls/
@@ -17,15 +17,25 @@ from django.contrib import admin
 
 from django.conf.urls import url, include
 from rest_framework import routers
-from api.views import DummyViewSet
+from api.views import ReaderViewSet
+from api.views import TagViewSet
+from api.views import TransactionViewSet
+from api.views import add_transaction
+from django.urls import path
+from rest_framework_simplejwt import views as jwt_views
 
 router = routers.DefaultRouter()
-router.register(r'dummy', DummyViewSet)
+router.register(r'reader', ReaderViewSet)
+router.register(r'tag', TagViewSet)
+router.register(r'transaction', TransactionViewSet)
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
     url(r'^', include(router.urls)),
+    url(r'^add_transaction/', add_transaction),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^admin/', admin.site.urls),
+    path('api/token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
 ]

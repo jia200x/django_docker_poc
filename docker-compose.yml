@@ -2,15 +2,19 @@ version: '3'
 
 services:
   db:
-    image: postgres
+    image: postgres:latest
+    ports:
+      - "5432:5432"
     environment:
       POSTGRES_HOST_AUTH_METHOD: trust
   web:
     build: .
+    environment:
+      PORT: 80
     command: bash -c "chmod +x /code/docker-entry.sh && /code/docker-entry.sh"
     volumes:
       - .:/code
     ports:
-      - "8000:8000"
+      - "80:80"
     depends_on:
       - db
